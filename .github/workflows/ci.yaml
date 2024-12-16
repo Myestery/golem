@@ -48,6 +48,18 @@ jobs:
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
       - name: Setup Rust
         run: rustup update stable --no-self-update && rustup default stable && rustup target add ${{ matrix.platform.target }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: './golem-ui-service/frontend/package-lock.json'
+      - name: Build Frontend
+        working-directory: ./golem-ui-service/frontend
+        run: |
+          npm ci
+          npm run build
+
       - uses: davidB/rust-cargo-make@v1
       - name: Install Rust Target
         run: rustup target add ${{ matrix.platform.target }}
@@ -207,7 +219,7 @@ jobs:
           labels: ${{ steps.meta-golem-router.outputs.labels }}
 
   build-and-test:
-    runs-on: ubuntu-latest-xlarge
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -218,6 +230,18 @@ jobs:
         run: git fetch origin --deepen=1
       - name: Setup Rust
         run: rustup update stable --no-self-update && rustup default stable
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: './golem-ui-service/frontend/package-lock.json'
+      - name: Build Frontend
+        working-directory: ./golem-ui-service/frontend
+        run: |
+          npm ci
+          npm run build
+
       - uses: Swatinem/rust-cache@v2
         with:
           shared-key: debug
@@ -275,7 +299,7 @@ jobs:
         run: cargo component build -p golem-wasm-rpc --no-default-features --features stub
 
   worker-tests-group1:
-    runs-on: ubuntu-latest-xlarge
+    runs-on: ubuntu-22.04
     name: worker-tests-group1
     steps:
       - name: Checkout
@@ -287,6 +311,18 @@ jobs:
         run: git fetch origin --deepen=1
       - name: Setup Rust
         run: rustup update stable --no-self-update && rustup default stable
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: './golem-ui-service/frontend/package-lock.json'
+      - name: Build Frontend
+        working-directory: ./golem-ui-service/frontend
+        run: |
+            npm ci
+            npm run build
+  
       - uses: Swatinem/rust-cache@v2
         with:
           shared-key: debug-workertests
@@ -313,7 +349,7 @@ jobs:
           include_passed: true
   worker-tests:
     needs: [ worker-tests-group1 ]
-    runs-on: ubuntu-latest-xlarge
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: true
       matrix:
@@ -336,6 +372,18 @@ jobs:
         run: git fetch origin --deepen=1
       - name: Setup Rust
         run: rustup update stable --no-self-update && rustup default stable
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: './golem-ui-service/frontend/package-lock.json'
+      - name: Build Frontend
+        working-directory: ./golem-ui-service/frontend
+        run: |
+            npm ci
+            npm run build
+  
       - uses: Swatinem/rust-cache@v2
         with:
           shared-key: debug-workertests
@@ -362,7 +410,7 @@ jobs:
           detailed_summary: true
           include_passed: true
   integration-tests:
-    runs-on: ubuntu-latest-xlarge
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -373,6 +421,18 @@ jobs:
         run: git fetch origin --deepen=1
       - name: Setup Rust
         run: rustup update stable --no-self-update && rustup default stable
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: './golem-ui-service/frontend/package-lock.json'
+      - name: Build Frontend
+        working-directory: ./golem-ui-service/frontend
+        run: |
+            npm ci
+            npm run build
+  
       - uses: cargo-bins/cargo-binstall@main
       - name: Install cargo-component
         run: cargo binstall --no-confirm cargo-component@0.13.2
@@ -404,7 +464,7 @@ jobs:
           detailed_summary: true
           include_passed: true
   cli-tests:
-    runs-on: ubuntu-latest-xlarge
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -443,7 +503,7 @@ jobs:
           detailed_summary: true
           include_passed: true
   sharding-tests:
-    runs-on: ubuntu-latest-xlarge
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -530,9 +590,9 @@ jobs:
           - golem
         cfg:
           - rust-target: x86_64-unknown-linux-gnu
-            os: ubuntu-latest-xlarge
+            os: ubuntu-22.04
           - rust-target: aarch64-unknown-linux-gnu
-            os: ubuntu-latest-xlarge
+            os: ubuntu-22.04
             cross: true
           - rust-target: x86_64-apple-darwin
             os: macos-latest
@@ -560,6 +620,18 @@ jobs:
         run: git fetch origin --deepen=1
       - name: Setup Rust
         run: rustup update stable --no-self-update && rustup default stable && rustup target add ${{ matrix.cfg.rust-target }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: './golem-ui-service/frontend/package-lock.json'
+      - name: Build Frontend
+        working-directory: ./golem-ui-service/frontend
+        run: |
+          npm ci
+          npm run build
+
       - uses: davidB/rust-cargo-make@v1
       - name: Install Protoc
         uses: arduino/setup-protoc@v3
